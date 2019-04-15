@@ -1,6 +1,5 @@
-package com.dichotome.zoomingimageview
+package com.dichotome.zoomingimageviewutils
 
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import androidx.annotation.ColorRes

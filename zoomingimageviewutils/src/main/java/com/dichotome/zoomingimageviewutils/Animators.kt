@@ -1,4 +1,4 @@
-package com.dichotome.zoomingimageview
+package com.dichotome.zoomingimageviewutils
 
 import android.animation.Animator
 import android.animation.ObjectAnimator

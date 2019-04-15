@@ -35,7 +35,6 @@ dependencies {
     compile "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.github.DichotoMe:RoundedImageView:1.2'
-    implementation project(path: ':zoomingimageviewutils')
 }
 repositories {
     mavenCentral()

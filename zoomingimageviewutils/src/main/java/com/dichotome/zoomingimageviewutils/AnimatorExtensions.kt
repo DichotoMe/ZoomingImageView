@@ -1,4 +1,4 @@
-package com.dichotome.zoomingimageview
+package com.dichotome.zoomingimageviewutils
 
 
 fun <H : AnimationHelper> H.addTo(collection: MutableCollection<H>) = apply {

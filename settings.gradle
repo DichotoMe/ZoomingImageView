@@ -1,2 +1,2 @@
-include ':app', ':zoomingimageview'
+include ':app', ':zoomingimageview', ':zoomingimageviewutils'
 rootProject.name='ZoomingImageViewApp'

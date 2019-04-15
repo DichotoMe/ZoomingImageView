@@ -1,4 +1,4 @@
-package com.dichotome.zoomingimageview
+package com.dichotome.zoomingimageviewutils
 
 import android.content.Context
 import android.content.res.Resources

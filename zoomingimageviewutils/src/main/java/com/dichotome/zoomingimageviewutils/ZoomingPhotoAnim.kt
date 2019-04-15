@@ -1,4 +1,4 @@
-package com.dichotome.zoomingimageview
+package com.dichotome.zoomingimageviewutils
 
 import android.animation.TimeInterpolator
 import android.view.View
@@ -13,7 +13,7 @@ import kotlin.math.min
 
 class DetachFromFrameAnimationHelper(
     private val targetView: RoundedImageView,
-    private val detachFrom: ZoomingImageView,
+    private val detachFrom: RoundedImageView,
     timeInterpolator: TimeInterpolator,
     animDuration: Long
 ) : LinearAnimationHelper(targetView, timeInterpolator, animDuration) {
