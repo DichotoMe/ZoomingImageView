@@ -1,0 +1,2 @@
+include ':app', ':zoomingimageview'
+rootProject.name='ZoomingImageViewApp'
