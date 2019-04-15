@@ -11,15 +11,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.core.os.bundleOf
 import com.dichotome.roundedimageview.RoundedImageView
-import com.dichotome.zoomingimageviewutils.addTo
-import com.dichotome.zoomingimageviewutils.cancelAll
-import com.dichotome.zoomingimageviewutils.col
-import com.dichotome.zoomingimageviewutils.copyForOverlay
-import com.dichotome.zoomingimageviewutils.endAll
-import com.dichotome.zoomingimageviewutils.evaluateAll
-import com.dichotome.zoomingimageviewutils.isDisplayed
-import com.dichotome.zoomingimageviewutils.setInCenter
-import com.dichotome.zoomingimageviewutils.setOnBackButtonClick
+import com.dichotome.zoomingimageviewutils.*
 import kotlin.math.max
 
 class ZoomingImageView @JvmOverloads constructor(
@@ -44,8 +36,8 @@ class ZoomingImageView @JvmOverloads constructor(
 
     private var isOverlayAttached = false
 
-    private val displayHeight = com.dichotome.zoomingimageviewutils.Constants(context).DISPLAY_HEIGHT
-    private val displayWidth = com.dichotome.zoomingimageviewutils.Constants(context).DISPLAY_WIDTH
+    private val displayHeight = Constants(context).DISPLAY_HEIGHT
+    private val displayWidth = Constants(context).DISPLAY_WIDTH
 
     private val photoZoomedSize = max(displayHeight, displayWidth)
 
@@ -90,7 +82,7 @@ class ZoomingImageView @JvmOverloads constructor(
 
     var isZoomed = false
 
-    private var swipeUpDetector = GestureDetector(context, com.dichotome.zoomingimageviewutils.SwipeUpListener(this) {
+    private var swipeUpDetector = GestureDetector(context, SwipeUpListener(this) {
         zoomOut()
     })
 
@@ -121,13 +113,13 @@ class ZoomingImageView @JvmOverloads constructor(
         addView(zoomablePhoto)
     }
 
-    private val zoomAnimators = ArrayList<com.dichotome.zoomingimageviewutils.AnimationHelper>()
-    private var detachOnClick: com.dichotome.zoomingimageviewutils.AnimationHelper? = null
-    private var translationOnClick: com.dichotome.zoomingimageviewutils.AnimationHelper? = null
-    private var zoomOnClick: com.dichotome.zoomingimageviewutils.AnimationHelper? = null
-    private var revealOnClick: com.dichotome.zoomingimageviewutils.AnimationHelper? = null
+    private val zoomAnimators = ArrayList<AnimationHelper>()
+    private var detachOnClick: AnimationHelper? = null
+    private var translationOnClick: AnimationHelper? = null
+    private var zoomOnClick: AnimationHelper? = null
+    private var revealOnClick: AnimationHelper? = null
 
-    private var alphaOverlay = com.dichotome.zoomingimageviewutils.AlphaAnimationHelper(
+    private var alphaOverlay = AlphaAnimationHelper(
         overlayBackgroundDark,
         DecelerateInterpolator(),
         DURATION_ZOOM,
@@ -161,26 +153,26 @@ class ZoomingImageView @JvmOverloads constructor(
         zoomablePhoto.also {
             zoomAnimators.clear()
 
-            detachOnClick = com.dichotome.zoomingimageviewutils.DetachFromFrameAnimationHelper(
+            detachOnClick = DetachFromFrameAnimationHelper(
                 it,
                 this,
                 DecelerateInterpolator(),
                 DURATION_CORNERS
             ).addTo(zoomAnimators)
 
-            zoomOnClick = com.dichotome.zoomingimageviewutils.ZoomAnimationHelper(
+            zoomOnClick = ZoomAnimationHelper(
                 it,
                 DecelerateInterpolator(),
                 DURATION_ZOOM
             ).addTo(zoomAnimators)
 
-            translationOnClick = com.dichotome.zoomingimageviewutils.ZoomTranslationHelper(
+            translationOnClick = ZoomTranslationHelper(
                 it,
                 DecelerateInterpolator(),
                 DURATION_ZOOM
             ).addTo(zoomAnimators)
 
-            revealOnClick = com.dichotome.zoomingimageviewutils.ZoomCircularRevealHelper(
+            revealOnClick = ZoomCircularRevealHelper(
                 it,
                 overlayBackgroundDark,
                 DecelerateInterpolator(),

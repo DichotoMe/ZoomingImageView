@@ -8,7 +8,9 @@ fun <H : AnimationHelper> H.addTo(collection: MutableCollection<H>) = apply {
 fun Collection<AnimationHelper>.evaluateAll() = forEach {
     it.end()
     when (it) {
+        is SimpleAnimationHelper -> it.evaluate()
         is LinearAnimationHelper -> it.evaluate()
+        is PlainAnimationHelper -> it.evaluateXY()
     }
 }
 
