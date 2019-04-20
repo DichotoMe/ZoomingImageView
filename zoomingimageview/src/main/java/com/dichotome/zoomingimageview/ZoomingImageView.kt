@@ -132,7 +132,7 @@ class ZoomingImageView @JvmOverloads constructor(
     private var wasViewRestored = false
 
     private fun isPhotoImageUpToDate(image: RoundedImageView) =
-        image.drawable == drawable || Math.abs(image.y - inWindowY) < 10
+        image.drawable == drawable && Math.abs(image.y - inWindowY) < 10
 
     private fun initPhoto() = zoomablePhoto.let {
         if (!isPhotoImageUpToDate(it)) {
