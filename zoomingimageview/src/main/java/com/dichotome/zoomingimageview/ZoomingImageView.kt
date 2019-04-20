@@ -34,12 +34,12 @@ class ZoomingImageView @JvmOverloads constructor(
         private const val SCALE = "scale"
     }
 
-    private var isOverlayAttached = false
-
     private val displayHeight = Constants(context).DISPLAY_HEIGHT
     private val displayWidth = Constants(context).DISPLAY_WIDTH
 
-    private val photoZoomedSize = max(displayHeight, displayWidth)
+    private var isOverlayAttached = false
+
+    private val zoomedPhotoSize = max(displayHeight, displayWidth)
 
     private var onZoomListener: ((it: ZoomingImageView) -> Unit)? = null
 
@@ -47,25 +47,26 @@ class ZoomingImageView @JvmOverloads constructor(
         onZoomListener = listener
     }
 
+    var isZoomedIn = false
+
     private fun onZoom() {
         if (wasViewRestored) restorePhoto()
 
         onZoomListener?.invoke(this)
-        zoomAnimators.endAll()
         zoomAnimators.evaluateAll()
     }
 
     fun zoomOut() {
-        if (isZoomed) {
-            isZoomed = false
+        if (isZoomedIn) {
             onZoom()
+            isZoomedIn = false
         }
     }
 
     fun zoomIn() {
-        if (!isZoomed) {
-            isZoomed = true
+        if (!isZoomedIn) {
             onZoom()
+            isZoomedIn = true
         }
     }
 
@@ -80,8 +81,6 @@ class ZoomingImageView @JvmOverloads constructor(
         }
     }
 
-    var isZoomed = false
-
     private var swipeUpDetector = GestureDetector(context, SwipeUpListener(this) {
         zoomOut()
     })
@@ -94,13 +93,11 @@ class ZoomingImageView @JvmOverloads constructor(
             FrameLayout.LayoutParams.MATCH_PARENT
         )
         setBackgroundColor(col(R.color.colorBlack))
-        setOnTouchListener { v, event ->
+        setOnTouchListener { _, event ->
             swipeUpDetector.onTouchEvent(event)
             true
         }
     }
-
-    private fun isOverlayVisible() = overlayBackgroundDark.isDisplayed
 
     private var zoomOverlayView = FrameLayout(context).apply {
         layoutParams = FrameLayout.LayoutParams(
@@ -128,12 +125,8 @@ class ZoomingImageView @JvmOverloads constructor(
 
     private var wasViewRestored = false
 
-    private fun isPhotoImageUpToDate(image: RoundedImageView?) = image?.let {
-        val currentPhoto = RoundedImageView(context)
-            .copyForOverlay(this)
-
-        Math.abs(image.y - currentPhoto.y) < 10
-    } ?: false
+    private fun isPhotoImageUpToDate(image: RoundedImageView) =
+        image.drawable != drawable || Math.abs(image.y - y) < 10
 
     private fun initPhoto() = zoomablePhoto.let {
         if (!isPhotoImageUpToDate(it)) {
@@ -144,8 +137,7 @@ class ZoomingImageView @JvmOverloads constructor(
 
     private fun restorePhoto() {
         initPhoto()
-        zoomablePhoto.apply { setInCenter() }
-
+        zoomablePhoto.setInCenter()
         wasViewRestored = false
     }
 
@@ -177,7 +169,7 @@ class ZoomingImageView @JvmOverloads constructor(
                 overlayBackgroundDark,
                 DecelerateInterpolator(),
                 it.cornerRadius,
-                photoZoomedSize,
+                zoomedPhotoSize,
                 DURATION_CORNERS
             ).addTo(zoomAnimators)
 
@@ -232,20 +224,10 @@ class ZoomingImageView @JvmOverloads constructor(
         super.onAttachedToWindow()
 
         if (!isOverlayAttached) {
-            rootView.apply {
-                setOnBackButtonClick(::isOverlayVisible) { zoomOut() }
-                findViewById<FrameLayout>(android.R.id.content).apply {
-                    addView(zoomOverlayView)
-                    isOverlayAttached = true
-                }
+            rootView.findViewById<FrameLayout>(android.R.id.content).apply {
+                addView(zoomOverlayView)
+                isOverlayAttached = true
             }
-        }
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        drawable?.let {
-            zoomablePhoto.setImageDrawable(it)
         }
     }
 

@@ -32,6 +32,8 @@ fun View.setOnBackButtonClick(condition: () -> Boolean, onClick: () -> Unit) {
 }
 
 fun RoundedImageView.copyForOverlay(imageView: RoundedImageView) = apply {
+
+    setImageDrawable(imageView.drawable)
     cornerRadius = imageView.cornerRadius
     layoutParams = android.widget.FrameLayout.LayoutParams(
         imageView.measuredWidth,
