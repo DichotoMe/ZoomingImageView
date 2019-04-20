@@ -231,6 +231,11 @@ class ZoomingImageView @JvmOverloads constructor(
         }
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        drawable?.let { zoomablePhoto.setImageDrawable(it) }
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         zoomAnimators.cancelAll()
