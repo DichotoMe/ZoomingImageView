@@ -37,6 +37,12 @@ class ZoomingImageView @JvmOverloads constructor(
     private val displayHeight = Constants(context).DISPLAY_HEIGHT
     private val displayWidth = Constants(context).DISPLAY_WIDTH
 
+    private val inWindowY: Int
+        get() = IntArray(2).let {
+            getLocationInWindow(it)
+            it[1]
+        }
+
     private var isOverlayAttached = false
 
     private val zoomedPhotoSize = max(displayHeight, displayWidth)
@@ -126,7 +132,7 @@ class ZoomingImageView @JvmOverloads constructor(
     private var wasViewRestored = false
 
     private fun isPhotoImageUpToDate(image: RoundedImageView) =
-        image.drawable == drawable || Math.abs(image.y - y) < 10
+        image.drawable == drawable || Math.abs(image.y - inWindowY) < 10
 
     private fun initPhoto() = zoomablePhoto.let {
         if (!isPhotoImageUpToDate(it)) {
