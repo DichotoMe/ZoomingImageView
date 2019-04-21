@@ -25,6 +25,7 @@ class ZoomingImageView @JvmOverloads constructor(
         const val DURATION_ZOOM = 200L
         private const val DURATION_CORNERS = 220L
 
+        private const val IS_ZOOMED_IN = "isZoomedIn"
         private const val SUPER_STATE = "superState"
         private const val PHOTO_WIDTH = "photoWidth"
         private const val PHOTO_HEIGHT = "photoHeight"
@@ -194,6 +195,7 @@ class ZoomingImageView @JvmOverloads constructor(
     override fun onSaveInstanceState() = zoomablePhoto.let {
         bundleOf(
             SUPER_STATE to super.onSaveInstanceState(),
+            IS_ZOOMED_IN to isZoomedIn,
             IS_PHOTO_VIEW_VISIBLE to this@ZoomingImageView.isDisplayed,
             IS_ZOOMING_PHOTO_VISIBLE to it.isDisplayed,
             PHOTO_HEIGHT to it.layoutParams.height,
@@ -206,6 +208,8 @@ class ZoomingImageView @JvmOverloads constructor(
     override fun onRestoreInstanceState(state: Parcelable?) {
         (state as? Bundle)?.run {
             super.onRestoreInstanceState(getParcelable<Parcelable>(SUPER_STATE))
+
+            isZoomedIn = getBoolean(IS_ZOOMED_IN)
 
             overlayBackgroundDark.apply {
                 isDisplayed = getBoolean(IS_ZOOMING_PHOTO_VISIBLE)
